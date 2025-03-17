@@ -6,6 +6,18 @@ Step 5: once that image got created, it then scanned through trivvy to provide u
 Step 6: Push the docker image to container registry. here we are using github action container registry.
 Step 7: Through sed command deployment file image tag updated to latest which is inside kubernetes directory.
 Step 8: Install docker, Kubectl and kind in ec2 instance with type as t2.medium or large.
+
+# For AMD64 / x86_64
+   38  [ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.27.0/kind-linux-amd64
+   39  # For ARM64
+   40  [ $(uname -m) = aarch64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.27.0/kind-linux-arm64
+   41  chmod +x ./kind
+   42  sudo mv ./kind /usr/local/bin/kind
+   43  kind
+   44  kind create cluster --name=devsecops-k8s-cluster
+   45  kubectlconfig current-cluster
+   46  kubectl config current-cluster
+
 Step 9: Then install argocd and fetch initial admin paasword then start port forwarding either through svc or deployment or pod.
 
 kubectl edit secret argocd-initial-admin-secret -n argocd
