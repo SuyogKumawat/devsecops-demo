@@ -121,9 +121,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           load: true
 
-      - name: Debug Image Name
-        run: echo "Resolved Image Name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.11.0
         with:
