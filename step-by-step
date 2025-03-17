@@ -1,0 +1,29 @@
+Step 1: Developer make changes in code
+Step 2: Create a PAT and then add in secrets in settings of github.
+Step 3: After that change pipeline gets triggered, it will start running unit testing, static code base testing, build the npm and then artifact will get stored in /dist directory.
+Step 4: Docker job get started once testing and build completes. It will build again the npm and create a new image with updated tag through dockerfile.
+Step 5: once that image got created, it then scanned through trivvy to provide us vulnerabilities.
+Step 6: Push the docker image to container registry. here we are using github action container registry.
+Step 7: Through sed command deployment file image tag updated to latest which is inside kubernetes directory.
+Step 8: Install docker, Kubectl and kind in ec2 instance with type as t2.medium or large.
+Step 9: Then install argocd and fetch initial admin paasword then start port forwarding either through svc or deployment or pod.
+
+kubectl edit secret argocd-initial-admin-secret -n argocd
+echo "encrypted-secret" | base64 -d
+kubectl port-forward svc/argocd-server 9200:80 -n argocd --address 0.0.0.0
+
+Step 10: Once login to argocd, create a new app write your project name, select sync as automated and github url and path where manifests file is stored. Save it.
+Step 11: You will see pod is failing with image pull backoff error. It is due to it is fetching the image from private registry i.e ghcr so need to create secret file in k8s.
+
+kubectl create secret docker-registry github-container-registry \
+  --docker-server=ghcr.io \
+  --docker-username=YOUR_GITHUB_USERNAME \
+  --docker-password=YOUR_GITHUB_TOKEN \
+  --docker-email=YOUR_EMAIL
+
+  Step 12: Here you go, pods are healthy. It will sync every 180 seconds.
+  Step 13: Start port forwarding for your tictactoe pod and map it to 80.
+
+  kubectl port-forward tic-tac-toe-86b886c9c-59p4t 2600:80  --address 0.0.0.0
+
+  
